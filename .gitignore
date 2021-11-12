@@ -54,3 +54,4 @@ dkms.conf
 # Additionals
 READEME.md
 philo/philo
+philo/objects/*
