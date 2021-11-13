@@ -6,7 +6,7 @@
 /*   By: ivloisy <ivloisy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 13:55:52 by ivloisy           #+#    #+#             */
-/*   Updated: 2021/11/12 17:40:28 by ivloisy          ###   ########.fr       */
+/*   Updated: 2021/11/13 03:24:57 by ivloisy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,29 @@ long	ft_atol(const char *str)
 	return (nb * sign);
 }
 
-long	get_time()
+char	*ft_strdup(const char *s1)
+{
+	size_t	i;
+	size_t	l;
+	char	*s2;
+
+	i = 0;
+	l = 0;
+	while (s1[l])
+		l++;
+	s2 = (char *)malloc(sizeof(char) * (l + 1));
+	if (s2 == NULL)
+		return (NULL);
+	while (i < l)
+	{
+		s2[i] = s1[i];
+		i++;
+	}
+	s2[i] = '\0';
+	return (s2);
+}
+
+long	get_time(void)
 {
 	long				time;
 	struct timeval		current_time;

@@ -6,7 +6,7 @@
 /*   By: ivloisy <ivloisy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 13:48:58 by ivloisy           #+#    #+#             */
-/*   Updated: 2021/11/12 19:59:07 by ivloisy          ###   ########.fr       */
+/*   Updated: 2021/11/13 03:53:05 by ivloisy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,11 @@ typedef struct s_data
 
 int		thread(t_data *data);
 int		print_error(char *s);
+void	finish(t_data *t_data);
 int		ft_isdigit(int c);
 int		ft_atoi(const char *str);
 long	ft_atol(const char *str);
-long	get_time();
+char	*ft_strdup(const char *s1);
+long	get_time(void);
 
 #endif

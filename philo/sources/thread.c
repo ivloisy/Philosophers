@@ -6,7 +6,7 @@
 /*   By: ivloisy <ivloisy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 16:07:24 by ivloisy           #+#    #+#             */
-/*   Updated: 2021/11/12 23:07:17 by ivloisy          ###   ########.fr       */
+/*   Updated: 2021/11/13 04:04:05 by ivloisy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	print_status(t_ph *ph, char *s)
 {
 	long	time;
 
-	time = get_time(ph);
+	time = get_time();
 	if (time == -1)
 		return (0);
 	time = time - ph->arg.start;
@@ -47,33 +47,41 @@ static int	print_status(t_ph *ph, char *s)
 
 static void	*routine(void *philo)
 {
-//	(void)ph;
 	t_ph	*ph;
+//	int		i;
 
 	ph = (t_ph *)philo;
 	if (ph->id % 2 == 0)
-		usleep(100);
-/* 	while (1)
-	{ */
+		usleep(1000);
+	print_status(ph, "has taken a fork");
+/* 	if (ph->arg.number_of_times_each_philosopher_must_eat == 0)
+		i = -1;
+	else
+		i = 0;
+	while (i < ph->arg.number_of_times_each_philosopher_must_eat)
+	{
 		pthread_mutex_lock(&ph->r_fork);
 		print_status(ph, "has taken a fork");
 		pthread_mutex_lock(ph->l_fork);
 		print_status(ph, "has taken a fork");
 		print_status(ph, "is eating");
 		usleep(ph->arg.time_to_eat * 1000);
-		pthread_mutex_unlock(ph->l_fork);
 		print_status(ph, "is sleeping");
+		pthread_mutex_unlock(ph->l_fork);
 		pthread_mutex_unlock(&ph->r_fork);
-//	}
-	
+		usleep(ph->arg.time_to_sleep * 1000);
+		print_status(ph, "is thinking");
+		if (ph->arg.number_of_times_each_philosopher_must_eat != 0)
+			i++;
+	} */
 	return (NULL);
 }
 
-int thread(t_data *data)
+int	thread(t_data *data)
 {
-//	t_ph	*ph;
 	int		i;
 
+	i = -1;
 	data->ph = (t_ph *)malloc(sizeof(t_ph) * data->arg.number_of_philosophers);
 	if (data->ph == NULL)
 	{
@@ -83,27 +91,21 @@ int thread(t_data *data)
 	data->arg.start = get_time();
 	if (data->arg.start < 0)
 	{
+		free (data->ph);
 		data->arg.error = "getimeofday failed.";
 		return (0);
 	}
-//	printf ("%ld\n", data->arg.start);///
- 	init_ph(data);
-	i = 0;
-	while (i < data->arg.number_of_philosophers)
+	init_ph(data);
+	while (++i < data->arg.number_of_philosophers)
 	{
 		data->ph[i].arg = data->arg;
 		if (pthread_create(&data->ph[i].th, NULL, routine, &data->ph[i]))
 		{
-			print_error("pthread_create failed.");
+			data->arg.error = "pthread_create failed.";
+			free (data->ph);
 			return (0);
 		}
-		i++;
 	}
-	i = 0;
-	while (i < data->arg.number_of_philosophers)
-	{
-		pthread_join(data->ph[i].th, NULL);
-		i++;
-	}
+	finish(data);
 	return (1);
 }

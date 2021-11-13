@@ -6,7 +6,7 @@
 #    By: ivloisy <ivloisy@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/07 13:31:49 by ivloisy           #+#    #+#              #
-#    Updated: 2021/11/10 16:14:48 by ivloisy          ###   ########.fr        #
+#    Updated: 2021/11/13 03:54:05 by ivloisy          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = philo
 
 CC = cc
 
-FLAG = -Wall -Werror -Wextra
+FLAG = -Wall -Werror -Wextra -pthread
 
 SRCDIR = sources
 
@@ -22,7 +22,8 @@ HDRDIR = includes
 
 SRC = ./$(SRCDIR)/philosophers.c \
 		./$(SRCDIR)/utils.c \
-		./$(SRCDIR)/thread.c
+		./$(SRCDIR)/thread.c \
+		./$(SRCDIR)/finish.c
 
 HDR = ./$(HDRDIR)/philosophers.h
 
