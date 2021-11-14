@@ -6,7 +6,7 @@
 /*   By: ivloisy <ivloisy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 13:48:58 by ivloisy           #+#    #+#             */
-/*   Updated: 2021/11/13 03:53:05 by ivloisy          ###   ########.fr       */
+/*   Updated: 2021/11/14 20:08:10 by ivloisy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,37 +22,43 @@
 
 typedef struct s_arg
 {
-	int		number_of_philosophers;
-	int		time_to_die;
-	int		time_to_eat;
-	int		time_to_sleep;
-	int		number_of_times_each_philosopher_must_eat;
-	char	*error;
-	long	start;
+	int				number_of_philosophers;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				number_of_times_each_philosopher_must_eat;
+	char			*error;
+	long			start;
+	pthread_mutex_t	dead;
+	int				d;
+	pthread_mutex_t	print;
 }t_arg;
 
 typedef struct s_ph
 {
 	int				id;
-	t_arg			arg;
+	t_arg			*arg;
 	pthread_t		th;
 	pthread_mutex_t	r_fork;
 	pthread_mutex_t	*l_fork;
+	long			last;
 }t_ph;
 
 typedef struct s_data
 {
-	t_arg	arg;
-	t_ph	*ph;
+	t_arg		arg;
+	t_ph		*ph;
+	pthread_t	supervisor;
 }t_data;
 
 int		thread(t_data *data);
 int		print_error(char *s);
+int		print_status(t_ph *ph, char *s);
+void	*routine(void *philo);
 void	finish(t_data *t_data);
 int		ft_isdigit(int c);
 int		ft_atoi(const char *str);
 long	ft_atol(const char *str);
-char	*ft_strdup(const char *s1);
 long	get_time(void);
 
 #endif

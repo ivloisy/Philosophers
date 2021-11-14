@@ -6,7 +6,7 @@
 /*   By: ivloisy <ivloisy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 16:07:24 by ivloisy           #+#    #+#             */
-/*   Updated: 2021/11/13 04:04:05 by ivloisy          ###   ########.fr       */
+/*   Updated: 2021/11/14 20:11:08 by ivloisy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,14 @@ static void	init_ph(t_data *data)
 	int	i;
 
 	i = 0;
+	pthread_mutex_init(&data->arg.dead, NULL);
+	data->arg.d = 0;
+	pthread_mutex_init(&data->arg.print, NULL);
 	while (i < data->arg.number_of_philosophers)
 	{
 		data->ph[i].id = i + 1;
 		data->ph[i].l_fork = NULL;
+		data->ph[i].last = data->arg.start;
 		pthread_mutex_init(&data->ph[i].r_fork, NULL);
 		if (data->arg.number_of_philosophers == 1)
 			return ;
@@ -31,58 +35,48 @@ static void	init_ph(t_data *data)
 		i++;
 	}
 }
-
-static int	print_status(t_ph *ph, char *s)
+/*
+static int	check_last(t_ph *ph)
 {
-	long	time;
-
-	time = get_time();
-	if (time == -1)
+	pthread_mutex_lock(&ph->arg->dead);
+	if ((get_time() - ph->last) > ph->arg->time_to_die)
+	{
+		ph->arg->d = 1;
+		pthread_mutex_lock(&ph->arg->print);
+		print_status(ph, "died");
+		pthread_mutex_unlock(&ph->arg->print);
+		pthread_mutex_unlock(&ph->arg->dead);
 		return (0);
-	time = time - ph->arg.start;
-	if (time >= 0 && time <= INT_MAX)
-		printf("%ld %d %s\n", time, ph->id, s);
+	}
+	pthread_mutex_unlock(&ph->arg->dead);
 	return (1);
 }
 
-static void	*routine(void *philo)
+ static void	*supervisor(void *d)
 {
-	t_ph	*ph;
-//	int		i;
+	t_data	*data;
+	int		i;
 
-	ph = (t_ph *)philo;
-	if (ph->id % 2 == 0)
-		usleep(1000);
-	print_status(ph, "has taken a fork");
-/* 	if (ph->arg.number_of_times_each_philosopher_must_eat == 0)
-		i = -1;
-	else
-		i = 0;
-	while (i < ph->arg.number_of_times_each_philosopher_must_eat)
+	data = (t_data *)d;
+	while (1)
 	{
-		pthread_mutex_lock(&ph->r_fork);
-		print_status(ph, "has taken a fork");
-		pthread_mutex_lock(ph->l_fork);
-		print_status(ph, "has taken a fork");
-		print_status(ph, "is eating");
-		usleep(ph->arg.time_to_eat * 1000);
-		print_status(ph, "is sleeping");
-		pthread_mutex_unlock(ph->l_fork);
-		pthread_mutex_unlock(&ph->r_fork);
-		usleep(ph->arg.time_to_sleep * 1000);
-		print_status(ph, "is thinking");
-		if (ph->arg.number_of_times_each_philosopher_must_eat != 0)
+		i = 0;
+		while (i < data->arg.number_of_philosophers)
+		{
+			if (!check_last(&data->ph[i]))
+				return (NULL);
 			i++;
-	} */
+		}
+	}
 	return (NULL);
-}
+} */
 
 int	thread(t_data *data)
 {
 	int		i;
 
 	i = -1;
-	data->ph = (t_ph *)malloc(sizeof(t_ph) * data->arg.number_of_philosophers);
+	data->ph = (t_ph *)malloc(sizeof(t_ph) * (data->arg.number_of_philosophers));
 	if (data->ph == NULL)
 	{
 		data->arg.error = "Memory allocation failed.";
@@ -98,7 +92,7 @@ int	thread(t_data *data)
 	init_ph(data);
 	while (++i < data->arg.number_of_philosophers)
 	{
-		data->ph[i].arg = data->arg;
+		data->ph[i].arg = &data->arg;
 		if (pthread_create(&data->ph[i].th, NULL, routine, &data->ph[i]))
 		{
 			data->arg.error = "pthread_create failed.";
@@ -106,6 +100,13 @@ int	thread(t_data *data)
 			return (0);
 		}
 	}
+/* 	if (pthread_create(&data->supervisor, NULL, supervisor, &data))
+	{
+		data->arg.error = "pthread_create failed.";
+		free (data->ph);
+		return (0);
+	}
+	pthread_join(data->supervisor, NULL); */
 	finish(data);
 	return (1);
 }

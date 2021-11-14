@@ -6,7 +6,7 @@
 #    By: ivloisy <ivloisy@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/07 13:31:49 by ivloisy           #+#    #+#              #
-#    Updated: 2021/11/13 03:54:05 by ivloisy          ###   ########.fr        #
+#    Updated: 2021/11/14 15:26:54 by ivloisy          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,9 +21,10 @@ SRCDIR = sources
 HDRDIR = includes
 
 SRC = ./$(SRCDIR)/philosophers.c \
-		./$(SRCDIR)/utils.c \
 		./$(SRCDIR)/thread.c \
-		./$(SRCDIR)/finish.c
+		./$(SRCDIR)/routine.c \
+		./$(SRCDIR)/finish.c \
+		./$(SRCDIR)/utils.c
 
 HDR = ./$(HDRDIR)/philosophers.h
 
