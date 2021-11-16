@@ -6,7 +6,7 @@
 #    By: ivloisy <ivloisy@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/07 13:31:49 by ivloisy           #+#    #+#              #
-#    Updated: 2021/11/14 15:26:54 by ivloisy          ###   ########.fr        #
+#    Updated: 2021/11/16 18:23:49 by ivloisy          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = philo
 
 CC = cc
 
-FLAG = -Wall -Werror -Wextra -pthread
+FLAG = -g -fsanitize=thread -Wall -Werror -Wextra -pthread
 
 SRCDIR = sources
 
@@ -56,3 +56,5 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
+# -g -fsanitize=address
+# -g -fsanitize=thread
