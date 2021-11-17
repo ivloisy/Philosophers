@@ -6,7 +6,7 @@
 /*   By: ivloisy <ivloisy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 13:55:52 by ivloisy           #+#    #+#             */
-/*   Updated: 2021/11/14 15:22:35 by ivloisy          ###   ########.fr       */
+/*   Updated: 2021/11/17 00:57:55 by ivloisy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,4 +81,13 @@ long	get_time(void)
 	if (gettimeofday(&time, NULL) == -1)
 		return (-1);
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+}
+
+void	wait_until(long towait)
+{
+	long	base;
+
+	base = get_time();
+	while (get_time() < base + towait)
+		usleep(500);
 }

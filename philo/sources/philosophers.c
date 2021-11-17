@@ -6,13 +6,13 @@
 /*   By: ivloisy <ivloisy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 13:36:02 by ivloisy           #+#    #+#             */
-/*   Updated: 2021/11/14 15:24:13 by ivloisy          ###   ########.fr       */
+/*   Updated: 2021/11/17 01:19:49 by ivloisy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philosophers.h"
 
-int	print_error(char *s)
+static int	print_error(char *s)
 {
 	if (!s)
 		printf("Error.\n");
@@ -104,13 +104,6 @@ int	main(int ac, char **av)
 		|| (data.arg.number_of_times_each_philosopher_must_eat < 1 && ac == 6))
 		return (print_error("Invalid argument."));
 	if (!thread(&data))
-		return (print_error(data.arg.error));
-/* 	printf("%i\n", data.arg.number_of_philosophers);
-	printf("%i\n", data.arg.time_to_die);
-	printf("%i\n", data.arg.time_to_eat);
-	printf("%i\n", data.arg.time_to_sleep);
-	printf("%i\n", data.arg.number_of_times_each_philosopher_must_eat); */
-//	free (ph);
-//	system("leaks philo");
+		return (print_error("Memory allocation or a pthread function failed."));
 	return (1);
 }
